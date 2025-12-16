@@ -6,8 +6,8 @@ public abstract class Client
     public int id { get; set; }
     public string name { get; set; }
     public string surname { get; set; }
-    public List<Location> LocationsActives { get; } = new();
-    public List<Location> HistoriqueLocations { get; } = new();
+    public List<Rental> LocationsActives { get; } = new();
+    public List<Rental> HistoriqueLocations { get; } = new();
     public Client(int id, string name, string surname)
     {
         this.id = id;
