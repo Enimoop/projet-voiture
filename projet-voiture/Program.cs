@@ -8,9 +8,9 @@ public class Program
 
         List<Vehicle> fleet = new List<Vehicle>
         {
-            new Vehicle { Id = 1, Brand = "Ford", Model = "Ranger", YearModel = 2025, Color = "Rouge", State = Vehicle.VehicleState.Available },
-            new Vehicle { Id = 2, Brand = "Peugeot", Model = "208", YearModel = 2022, Color = "Blanc", State = Vehicle.VehicleState.Available },
-            new Vehicle { Id = 3, Brand = "Tesla", Model = "Model 3", YearModel = 2023, Color = "Noir", State = Vehicle.VehicleState.Maintenance },
+            new Vehicle { Id = 1, Brand = "Ford", Model = "Ranger", YearModel = 2025, Color = "Rouge", BasicPrice = 120, State = Vehicle.VehicleState.Available },
+            new Vehicle { Id = 2, Brand = "Peugeot", Model = "208", YearModel = 2022, Color = "Blanc", BasicPrice = 90, State = Vehicle.VehicleState.Available },
+            new Vehicle { Id = 3, Brand = "Tesla", Model = "Model 3", YearModel = 2023, Color = "Noir", BasicPrice = 150, State = Vehicle.VehicleState.Maintenance },
         };
 
         Client? currentClient = null;
@@ -24,7 +24,7 @@ public class Program
             Console.WriteLine("2) Lister les véhicules");
             Console.WriteLine("3) Créer une location");
             Console.WriteLine("4) Mes locations actives");
-            Console.WriteLine("5) Terminer une location");
+            Console.WriteLine("5) Terminer une location et afficher sa facture");
             Console.WriteLine("6) Annuler une location (future)");
             Console.WriteLine("7) Résilier une location (en cours)");
             Console.WriteLine("0) Quitter");
@@ -101,7 +101,7 @@ public class Program
         }
     }
 
-     static Client RegisterClient()
+    static Client RegisterClient()
     {
         Console.WriteLine("\n--- Enregistrement client ---");
         int id = ReadInt("Id client : ");
@@ -225,7 +225,6 @@ public class Program
         }
 
         rental.TerminerLocation();
-        Console.WriteLine("Location terminée. Véhicule remis en disponibilité (ou maintenance si tu le gères).");
     }
 
     static void CancelFutureRental(Client client)
