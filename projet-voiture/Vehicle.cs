@@ -10,9 +10,24 @@ public class Vehicle
     public string Brand { get; set; }
     public string Model { get; set; }
     public int YearModel { get; set; }
+    public int BasicPrice { get; set; }
     public string Color { get; set; }
     public VehicleState State { get; set; }
     public List<Rental> Rentals { get; } = new();
+
+    public int KilometrageTotal { get; set; }
+    public int KilometrageActuel { get; set; }
+    public DateTime? LastMaintenance { get; set; }
+
+    public bool BesoinMaintenance()
+    {
+        if (LastMaintenance is not null)
+        {
+            return DateTime.Now - LastMaintenance > TimeSpan.FromDays(60);
+        }
+        return KilometrageActuel - KilometrageTotal > 10000;
+    }
+
 
     public void AfficherDetails()
     {
@@ -21,6 +36,7 @@ public class Vehicle
         Console.WriteLine($"Modèle: {Model}");
         Console.WriteLine($"Année: {YearModel}");
         Console.WriteLine($"Couleur: {Color}");
+        Console.WriteLine($"Besoin de Maintenance: {BesoinMaintenance()}");
     }
 
     public bool IsAvailable(DateTime start, DateTime end)
