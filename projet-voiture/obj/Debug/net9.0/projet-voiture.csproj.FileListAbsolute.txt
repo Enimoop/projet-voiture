@@ -1,0 +1,15 @@
+/home/erwanclx/Dev/ESIEE/projet-voiture/projet-voiture/bin/Debug/net9.0/projet-voiture
+/home/erwanclx/Dev/ESIEE/projet-voiture/projet-voiture/bin/Debug/net9.0/projet-voiture.deps.json
+/home/erwanclx/Dev/ESIEE/projet-voiture/projet-voiture/bin/Debug/net9.0/projet-voiture.runtimeconfig.json
+/home/erwanclx/Dev/ESIEE/projet-voiture/projet-voiture/bin/Debug/net9.0/projet-voiture.dll
+/home/erwanclx/Dev/ESIEE/projet-voiture/projet-voiture/bin/Debug/net9.0/projet-voiture.pdb
+/home/erwanclx/Dev/ESIEE/projet-voiture/projet-voiture/obj/Debug/net9.0/projet-voiture.GeneratedMSBuildEditorConfig.editorconfig
+/home/erwanclx/Dev/ESIEE/projet-voiture/projet-voiture/obj/Debug/net9.0/projet-voiture.AssemblyInfoInputs.cache
+/home/erwanclx/Dev/ESIEE/projet-voiture/projet-voiture/obj/Debug/net9.0/projet-voiture.AssemblyInfo.cs
+/home/erwanclx/Dev/ESIEE/projet-voiture/projet-voiture/obj/Debug/net9.0/projet-voiture.csproj.CoreCompileInputs.cache
+/home/erwanclx/Dev/ESIEE/projet-voiture/projet-voiture/obj/Debug/net9.0/projet-voiture.sourcelink.json
+/home/erwanclx/Dev/ESIEE/projet-voiture/projet-voiture/obj/Debug/net9.0/projet-voiture.dll
+/home/erwanclx/Dev/ESIEE/projet-voiture/projet-voiture/obj/Debug/net9.0/refint/projet-voiture.dll
+/home/erwanclx/Dev/ESIEE/projet-voiture/projet-voiture/obj/Debug/net9.0/projet-voiture.pdb
+/home/erwanclx/Dev/ESIEE/projet-voiture/projet-voiture/obj/Debug/net9.0/projet-voiture.genruntimeconfig.cache
+/home/erwanclx/Dev/ESIEE/projet-voiture/projet-voiture/obj/Debug/net9.0/ref/projet-voiture.dll
