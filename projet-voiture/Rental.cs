@@ -3,14 +3,15 @@ public class Rental
     public int Id { get; set; }
     public Client Locataire { get; set; }
     public Vehicle Vehicle { get; set; }
-    public DateTime StartDate { get; set; }
-    public DateTime EndDate { get; set; }
+    public DateTime StartDate { get; private set; }
+    public DateTime EndDate { get; private set; }
     public bool GPS { get; set; }
     public bool ChildSeat { get; set; }
     public bool ExtraInsurance { get; set; }
 
     public double Deposit { get; }
     public bool IsFinished { get; private set; }
+    public bool IsCanceled { get; private set; }
 
     public Rental(int id, Client locataire, Vehicle vehicle, DateTime startDate, DateTime endDate)
     {
@@ -22,8 +23,8 @@ public class Rental
         if (!locataire.PeutLouer())
             throw new Exception("Le client a atteint la limite de locations.");
 
-        if (vehicle.State != Vehicle.VehicleState.Available)
-            throw new Exception("Le véhicule n'est pas disponible.");
+        if (!vehicle.IsAvailable(startDate, endDate))
+            throw new Exception("Le véhicule est déjà réservé sur cette période.");
 
         this.Id = id;
         this.Locataire = locataire;
@@ -33,7 +34,12 @@ public class Rental
 
          Deposit = locataire.GetDepotGarantie();
 
-        vehicle.State = Vehicle.VehicleState.Rented;
+        vehicle.Rentals.Add(this);
+
+        if (StartDate.Date <= DateTime.Today && EndDate.Date > DateTime.Today)
+        {
+            vehicle.State = Vehicle.VehicleState.Rented;
+        }
         locataire.LocationsActives.Add(this);
     }
 
@@ -65,13 +71,49 @@ public class Rental
     public void TerminerLocation()
     {
         if (IsFinished)
-            throw new Exception("La location est déjà terminée.");
+            throw new Exception("La location est déjà terminée."); 
+
+        string facture = GenererFacture();
+
+        Console.WriteLine("\n===== FACTURE =====");
+        Console.WriteLine(facture);
+        Console.WriteLine("===================\n");
 
         IsFinished = true;
         Vehicle.State = Vehicle.VehicleState.Available;
         Locataire.LocationsActives.Remove(this);
         Locataire.HistoriqueLocations.Add(this);
     }
+
+    public void Annuler()
+    {
+        if (IsFinished) throw new Exception("Déjà terminée.");
+        if (IsCanceled) throw new Exception("Déjà annulée.");
+
+        if (StartDate.Date <= DateTime.Today)
+            throw new Exception("Impossible d'annuler : la location a déjà commencé.");
+
+        IsCanceled = true;
+
+        Locataire.LocationsActives.Remove(this);
+
+        Locataire.HistoriqueLocations.Add(this);
+
+        Vehicle.Rentals.Remove(this);
+    }
+
+    public void ResilierMaintenant()
+    {
+        if (IsFinished) throw new Exception("Déjà terminée.");
+        if (IsCanceled) throw new Exception("Déjà annulée.");
+
+        if (DateTime.Today < StartDate.Date)
+            throw new Exception("La location n'a pas encore commencé (annule plutôt).");
+
+        EndDate = DateTime.Today.AddDays(1);
+        TerminerLocation();
+    }
+
 
     public string GenererFacture()
     {
