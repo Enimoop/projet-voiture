@@ -44,7 +44,7 @@ public class Particulier : Client
    
     public override double GetDepotGarantie()
     {
-        return 500.0;
+        return 300.0;
     }
 }
 
@@ -59,6 +59,6 @@ public class Premium : Client
     }
     public override double GetDepotGarantie()
     {
-        return 300.0;
+        return 150.0;
     }
 }
