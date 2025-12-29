@@ -32,7 +32,7 @@ public class Rental
         this.StartDate = startDate;
         this.EndDate = endDate;
 
-         Deposit = locataire.GetDepotGarantie();
+        Deposit = locataire.GetDepotGarantie();
 
         vehicle.Rentals.Add(this);
 
@@ -50,13 +50,13 @@ public class Rental
         Console.WriteLine($"Véhicule: {Vehicle.Brand} {Vehicle.Model}");
         Console.WriteLine($"Date de début: {StartDate.ToShortDateString()}");
         Console.WriteLine($"Date de fin: {EndDate.ToShortDateString()}");
-    } 
+    }
 
     public double CalculerPrix()
     {
         int duration = (EndDate - StartDate).Days;
 
-        double total = 100 * duration;
+        double total = Vehicle.BasicPrice * duration;
 
         if (GPS) total += 5 * duration;
         if (ChildSeat) total += 3 * duration;
@@ -71,7 +71,7 @@ public class Rental
     public void TerminerLocation()
     {
         if (IsFinished)
-            throw new Exception("La location est déjà terminée."); 
+            throw new Exception("La location est déjà terminée.");
 
         string facture = GenererFacture();
 
