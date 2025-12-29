@@ -184,7 +184,7 @@ public class Program
             rentals.Add(rental);
             nextRentalId++;
 
-            Console.WriteLine("✅ Location créée !");
+            Console.WriteLine("Location créée !");
         }
         catch (Exception ex)
         {
@@ -259,11 +259,11 @@ public class Program
         try
         {
             rental.Annuler();
-            Console.WriteLine("✅ Location future annulée.");
+            Console.WriteLine("Location future annulée.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"❌ Impossible d'annuler : {ex.Message}");
+            Console.WriteLine($"Impossible d'annuler : {ex.Message}");
         }
     }
 
@@ -298,11 +298,11 @@ public class Program
         try
         {
             rental.ResilierMaintenant();
-            Console.WriteLine("✅ Location résiliée (retour anticipé).");
+            Console.WriteLine("Location résiliée (retour anticipé).");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"❌ Impossible de résilier : {ex.Message}");
+            Console.WriteLine($"Impossible de résilier : {ex.Message}");
         }
     }
 
