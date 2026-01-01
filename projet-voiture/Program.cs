@@ -159,6 +159,15 @@ public class Program
         DateTime start = ReadDate("Date début (ex: 16/12/2025) : ");
         DateTime end = ReadDate("Date fin (ex: 20/12/2025) : ");
 
+        while (end.Date <= start.Date)
+        {
+            if (end.Date <= start.Date)
+                Console.WriteLine("La date de fin doit être la après la date de début.");
+            
+            start = ReadDate("Date début (ex: 16/12/2025) : ");
+            end = ReadDate("Date fin (ex: 20/12/2025) : ");
+        }
+
         bool gps = ReadYesNo("GPS (5€/jour) ? (o/n) : ");
         bool childSeat = ReadYesNo("Siège enfant (3€/jour) ? (o/n) : ");
         bool extraInsurance = ReadYesNo("Assurance supplémentaire (50€ fixe) ? (o/n) : ");
@@ -178,6 +187,7 @@ public class Program
 
         try
         {
+            Console.WriteLine("\n--- Récapitulatif ---");
             Rental rental = new Rental(nextRentalId, client, selected, start, end);
 
             if (gps) rental.Options.Add(new Option("GPS", OptionType.Journalier, 5));
@@ -187,8 +197,6 @@ public class Program
             rental.Promotion = promo;
 
             double price = rental.CalculerPrix();
-
-            Console.WriteLine("\n--- Récapitulatif ---");
             rental.AfficherDetails();
             Console.WriteLine($"Dépôt de garantie à verser : {rental.Deposit:0.00}€");
             Console.WriteLine($"Prix total : {price:0.00}€");
