@@ -19,8 +19,10 @@ public class Program
 
         while (true)
         {
-            Console.WriteLine("\n=== LOCATION DE VEHICULES ===");
-            Console.WriteLine("1) S'enregistrer / Se connecter (client)");
+            DateTime today = DateTime.Today;
+            Console.WriteLine("=== Date actuelle : " + today.ToString("dd/MM/yyyy") + " ===");
+            Console.WriteLine("=== LOCATION DE VEHICULES ===");
+            Console.WriteLine("\n1) S'enregistrer / Se connecter (client)");
             Console.WriteLine("2) Lister les véhicules");
             Console.WriteLine("3) Créer une location");
             Console.WriteLine("4) Mes locations actives");
@@ -264,13 +266,21 @@ public class Program
     {
         Console.WriteLine("\n--- Annuler une location future ---");
 
-        var futures = client.LocationsActives
-            .Where(r => r.StartDate.Date > DateTime.Today)
+        var actives = client.LocationsActives
+            .Where(r => !r.IsFinished && !r.IsCanceled)
             .ToList();
 
+        if (actives.Count == 0)
+        {
+            Console.WriteLine("Aucune location active.");
+            return;
+        }
+
+        var futures = actives.Where(r => r.StartDate.Date > DateTime.Today).ToList();
         if (futures.Count == 0)
         {
             Console.WriteLine("Aucune location future à annuler.");
+            Console.WriteLine("(Les locations qui ont déjà commencé ne peuvent pas être annulées)");
             return;
         }
 
@@ -303,13 +313,21 @@ public class Program
     {
         Console.WriteLine("\n--- Résilier une location (en cours) ---");
 
-        var inProgress = client.LocationsActives
-            .Where(r => r.StartDate.Date <= DateTime.Today && DateTime.Today < r.EndDate.Date && !r.IsFinished)
+        var actives = client.LocationsActives
+            .Where(r => !r.IsFinished && !r.IsCanceled)
             .ToList();
 
+        if (actives.Count == 0)
+        {
+            Console.WriteLine("Aucune location active.");
+            return;
+        }
+
+        var inProgress = actives.Where(r => r.StartDate.Date <= DateTime.Today).ToList();
         if (inProgress.Count == 0)
         {
             Console.WriteLine("Aucune location en cours à résilier.");
+            Console.WriteLine("(Les locations futures doivent être annulées, pas résiliées)");
             return;
         }
 
@@ -364,6 +382,7 @@ public class Program
         {
             Console.WriteLine($"Location #{r.Id}");
             Console.WriteLine($"Véhicule : {r.Vehicle.Brand} {r.Vehicle.Model}");
+
             Console.WriteLine($"Période : {r.StartDate:dd/MM/yyyy} -> {r.EndDate:dd/MM/yyyy}");
             Console.WriteLine($"Terminée : {(r.IsFinished ? "Oui" : "Non")}");
             Console.WriteLine($"Annulée : {(r.IsCanceled ? "Oui" : "Non")}");
