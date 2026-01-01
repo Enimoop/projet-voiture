@@ -173,6 +173,16 @@ Justification :
 
 - La facture est stockée dans l’historique du client.
 
+
+### 3.8 Espace admin
+Afin de manipuler simplement la flotte nous avons décidé d'ajouter un outil d'administration basique pour la flotte. Le choix de ne pas créer de classe dédiée a été motivée par le fait que cet outil est un outil client par définition.
+
+ `AuthenticateAdmin()` a été créé permettant une authentification uniquement par mot de passe stocké (admin pour simplicité).
+
+Cet outil a été d'une part motivé par sa flexibilité pour travailler mais aussi de l'évolutivité de l'outil, car j'ai pu me baser sur des méthodes déclarées comme `Vehicle.AfficherDetails()`, le ré-use de code à donc été optimisé.
+
+Ainsi, dans le menu au lancement les menu Créer un véhicule et Supprimer un véhicule seront proposés, propulsés par `CreateVehicle()` et `DeleteVehicle()` protégés par le mot de passe admin.
+
 ## 4. Gestion des contraintes métier
 | Contrainte                   | Implémentation                     |
 | ---------------------------- | ---------------------------------- |
