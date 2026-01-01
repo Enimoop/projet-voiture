@@ -11,6 +11,8 @@ public class Program
             new Vehicle { Id = 1, Brand = "Ford", Model = "Ranger", YearModel = 2025, Color = "Rouge", BasicPrice = 120, State = Vehicle.VehicleState.Available },
             new Vehicle { Id = 2, Brand = "Peugeot", Model = "208", YearModel = 2022, Color = "Blanc", BasicPrice = 90, State = Vehicle.VehicleState.Available },
             new Vehicle { Id = 3, Brand = "Tesla", Model = "Model 3", YearModel = 2023, Color = "Noir", BasicPrice = 150, State = Vehicle.VehicleState.Maintenance },
+            new Vehicle { Id = 4, Brand = "Renault", Model = "Clio", YearModel = 2024, Color = "Bleu", BasicPrice = 80, State = Vehicle.VehicleState.Available },
+            new Vehicle { Id = 5, Brand = "Citroën", Model = "C4", YearModel = 2025, Color = "Vert", BasicPrice = 100, State = Vehicle.VehicleState.Available },
         };
 
         Client? currentClient = null;
