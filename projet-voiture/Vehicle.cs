@@ -40,7 +40,7 @@ public class Vehicle
     {
         foreach (var r in Rentals)
         {
-            if (r.IsCanceled) continue;
+            if (r.IsCanceled || r.IsFinished) continue;
 
             bool overlap = start < r.EndDate && end > r.StartDate;
             if (overlap) return false;

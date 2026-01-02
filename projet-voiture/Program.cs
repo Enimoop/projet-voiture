@@ -11,16 +11,21 @@ public class Program
             new Vehicle { Id = 1, Brand = "Ford", Model = "Ranger", YearModel = 2025, Color = "Rouge", BasicPrice = 120, State = Vehicle.VehicleState.Available },
             new Vehicle { Id = 2, Brand = "Peugeot", Model = "208", YearModel = 2022, Color = "Blanc", BasicPrice = 90, State = Vehicle.VehicleState.Available },
             new Vehicle { Id = 3, Brand = "Tesla", Model = "Model 3", YearModel = 2023, Color = "Noir", BasicPrice = 150, State = Vehicle.VehicleState.Maintenance },
+            new Vehicle { Id = 4, Brand = "Renault", Model = "Clio", YearModel = 2024, Color = "Bleu", BasicPrice = 80, State = Vehicle.VehicleState.Available },
+            new Vehicle { Id = 5, Brand = "Citroën", Model = "C4", YearModel = 2025, Color = "Vert", BasicPrice = 100, State = Vehicle.VehicleState.Available },
         };
 
         Client? currentClient = null;
         List<Rental> rentals = new List<Rental>();
         int nextRentalId = 1;
+        int nextVehicleId = 6;
 
         while (true)
         {
-            Console.WriteLine("\n=== LOCATION DE VEHICULES ===");
-            Console.WriteLine("1) S'enregistrer / Se connecter (client)");
+            DateTime today = DateTime.Today;
+            Console.WriteLine("=== Date actuelle : " + today.ToString("dd/MM/yyyy") + " ===");
+            Console.WriteLine("=== LOCATION DE VEHICULES ===");
+            Console.WriteLine("\n1) S'enregistrer / Se connecter (client)");
             Console.WriteLine("2) Lister les véhicules");
             Console.WriteLine("3) Créer une location");
             Console.WriteLine("4) Mes locations actives");
@@ -28,6 +33,9 @@ public class Program
             Console.WriteLine("6) Annuler une location (future)");
             Console.WriteLine("7) Résilier une location (en cours)");
             Console.WriteLine("8) Historique de mes locations");
+            Console.WriteLine("================================================");
+            Console.WriteLine("9) Créer un véhicule");
+            Console.WriteLine("10) Supprimer un véhicule");
             Console.WriteLine("0) Quitter");
             Console.Write("Choix : ");
 
@@ -98,6 +106,23 @@ public class Program
                 DisplayRentalHistory(currentClient);
                 break;
 
+                case "9":
+                    if (!AuthenticateAdmin())
+                    {
+                        Console.WriteLine("Authentification échouée.");
+                        break;
+                    }
+                    CreateVehicle(fleet, ref nextVehicleId);
+                    break;
+
+                case "10":
+                    if (!AuthenticateAdmin())
+                    {
+                        Console.WriteLine("Authentification échouée.");
+                        break;
+                    }
+                    DeleteVehicle(fleet, rentals);
+                    break;
 
                 case "0":
                     Console.WriteLine("Au revoir !");
@@ -264,13 +289,21 @@ public class Program
     {
         Console.WriteLine("\n--- Annuler une location future ---");
 
-        var futures = client.LocationsActives
-            .Where(r => r.StartDate.Date > DateTime.Today)
+        var actives = client.LocationsActives
+            .Where(r => !r.IsFinished && !r.IsCanceled)
             .ToList();
 
+        if (actives.Count == 0)
+        {
+            Console.WriteLine("Aucune location active.");
+            return;
+        }
+
+        var futures = actives.Where(r => r.StartDate.Date > DateTime.Today).ToList();
         if (futures.Count == 0)
         {
             Console.WriteLine("Aucune location future à annuler.");
+            Console.WriteLine("(Les locations qui ont déjà commencé ne peuvent pas être annulées)");
             return;
         }
 
@@ -303,13 +336,21 @@ public class Program
     {
         Console.WriteLine("\n--- Résilier une location (en cours) ---");
 
-        var inProgress = client.LocationsActives
-            .Where(r => r.StartDate.Date <= DateTime.Today && DateTime.Today < r.EndDate.Date && !r.IsFinished)
+        var actives = client.LocationsActives
+            .Where(r => !r.IsFinished && !r.IsCanceled)
             .ToList();
 
+        if (actives.Count == 0)
+        {
+            Console.WriteLine("Aucune location active.");
+            return;
+        }
+
+        var inProgress = actives.Where(r => r.StartDate.Date <= DateTime.Today).ToList();
         if (inProgress.Count == 0)
         {
             Console.WriteLine("Aucune location en cours à résilier.");
+            Console.WriteLine("(Les locations futures doivent être annulées, pas résiliées)");
             return;
         }
 
@@ -418,6 +459,128 @@ public class Program
 
             Console.WriteLine("Réponds par o/n.");
         }
+    }
+
+    static bool AuthenticateAdmin()
+    {
+        Console.WriteLine("\n--- Connexion Administration ---");
+        Console.Write("Entrez le mot de passe administrateur : ");
+        string? input = Console.ReadLine();
+
+        if (input == "admin")
+        {
+            return true;
+        }
+        else
+        {
+            Console.WriteLine("Accès refusé : mot de passe incorrect.");
+            return false;
+        }
+    }
+
+    static void CreateVehicle(List<Vehicle> fleet, ref int nextVehicleId)
+    {
+        Console.WriteLine("\n--- Création d'un véhicule ---");
+        
+        Console.Write("Marque : ");
+        string brand = Console.ReadLine() ?? "";
+        
+        Console.Write("Modèle : ");
+        string model = Console.ReadLine() ?? "";
+        
+        int yearModel = ReadInt("Année : ");
+        
+        Console.Write("Couleur : ");
+        string color = Console.ReadLine() ?? "";
+
+        double basicPrice = 0;
+        while (true)
+        {
+            Console.Write("Prix de base par jour (€) : ");
+            string? basicPriceInput = Console.ReadLine();
+            if (double.TryParse(basicPriceInput, out double basicPriceValue))
+            {
+                basicPrice = basicPriceValue;
+                break;
+            }
+            Console.WriteLine("Prix de base invalide. Recommence.");
+        }
+        
+        Console.WriteLine("Etat : 1) Disponible  2) En maintenance");
+        Console.Write("Choix : ");
+        string? stateChoice = Console.ReadLine();
+        Vehicle.VehicleState state = stateChoice == "2" 
+            ? Vehicle.VehicleState.Maintenance 
+            : Vehicle.VehicleState.Available;
+
+        int mileage = ReadInt("Kilométrage : ");
+
+        Vehicle newVehicle = new Vehicle
+        {
+            Id = nextVehicleId,
+            Brand = brand,
+            Model = model,
+            YearModel = yearModel,
+            Color = color,
+            BasicPrice = basicPrice,
+            State = state,
+            Mileage = mileage,
+            MileageAtLastMaintenance = mileage,
+            LastMaintenance = DateTime.Today
+        };
+
+        Console.WriteLine("\n--- Récapitulatif ---");
+        newVehicle.AfficherDetails();
+
+        bool confirm = ReadYesNo("Valider et créer le véhicule ? (o/n) : ");
+        if (!confirm)
+        {
+            Console.WriteLine("Création annulée.");
+            return;
+        }
+
+        fleet.Add(newVehicle);
+        nextVehicleId++;
+
+        Console.WriteLine("✅ Véhicule créé !");
+    }
+
+    static void DeleteVehicle(List<Vehicle> fleet, List<Rental> rentals)
+    {
+        Console.WriteLine("\n--- Suppression d'un véhicule ---");
+        DisplayVehicles(fleet);
+
+        int vehicleId = ReadInt("Id du véhicule à supprimer : ");
+        Vehicle? vehicle = fleet.FirstOrDefault(v => v.Id == vehicleId);
+
+        if (vehicle == null)
+        {
+            Console.WriteLine("Véhicule introuvable.");
+            return;
+        }
+
+        var activeRentals = vehicle.Rentals
+            .Where(r => !r.IsFinished && !r.IsCanceled)
+            .ToList();
+
+        if (activeRentals.Count > 0)
+        {
+            Console.WriteLine($"Impossible de supprimer : le véhicule a {activeRentals.Count} location(s) active(s).");
+            return;
+        }
+
+        Console.WriteLine("\n--- Véhicule à supprimer ---");
+        vehicle.AfficherDetails();
+
+        bool confirm = ReadYesNo("Confirmer la suppression ? (o/n) : ");
+        if (!confirm)
+        {
+            Console.WriteLine("Suppression annulée.");
+            return;
+        }
+
+        fleet.Remove(vehicle);
+        Console.WriteLine("✅ Véhicule supprimé !");
     }
 
 }
