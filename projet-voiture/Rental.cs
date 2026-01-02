@@ -33,6 +33,9 @@ public class Rental
         if (!locataire.PeutLouer())
             throw new Exception("Le client a atteint la limite de locations.");
 
+        if (vehicle.State == Vehicle.VehicleState.Maintenance)
+            throw new Exception("Le véhicule est en maintenance.");
+
         if (!vehicle.IsAvailable(startDate, endDate))
             throw new Exception("Le véhicule est déjà réservé sur cette période.");
 
