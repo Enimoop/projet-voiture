@@ -405,7 +405,6 @@ public class Program
         {
             Console.WriteLine($"Location #{r.Id}");
             Console.WriteLine($"Véhicule : {r.Vehicle.Brand} {r.Vehicle.Model}");
-
             Console.WriteLine($"Période : {r.StartDate:dd/MM/yyyy} -> {r.EndDate:dd/MM/yyyy}");
             Console.WriteLine($"Terminée : {(r.IsFinished ? "Oui" : "Non")}");
             Console.WriteLine($"Annulée : {(r.IsCanceled ? "Oui" : "Non")}");
